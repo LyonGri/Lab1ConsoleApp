@@ -8,34 +8,88 @@ namespace Lab1ConsoleApp
 {
     class PersonList
     {
-        //public List<Person> Persons = new List<Person>();
+        //Описание абстракции списка содержащего объекты класса Person
         public Person[] Persons;
         public PersonList()
         {
             Persons = new Person[0];
-            //new List<Person>();
-            //Persons.Add(Person.);
         }
 
         //Метод для добавления новых Person
-        //public Person PersonListAdd(string Name, string Surname, byte Age, Gender Gender)
-        //{
-        //    Array.Resize<Person>(ref Persons, Persons.Length + 1);
-        //    int a = Persons.Length;
-        //    Persons[Persons.Length - 1] = new Person(Name, Surname, Age, Gender);
-        //    return Persons[Persons.Length - 1];
-        //}
-        public Person PersonListAdd()
+        public Person PersonAdd(Person Person)
         { 
             Array.Resize<Person>(ref Persons, Persons.Length + 1);
-            int a = Persons.Length;
-            Persons[Persons.Length - 1] = Person.GetRandomPerson();
+            Persons[Persons.Length - 1] = Person;
             return Persons[Persons.Length - 1];
+        }
+
+        //Удаление элемента по индексу
+        public Person[] PersonDelete(int IndexToDelete)
+        {
+            // Проверки, что наш массив не пуст и что указанный индекс существует.
+            if (Persons.Length == 0) return Persons;
+            if (Persons.Length <= IndexToDelete) return Persons;
+
+            var Output = new Person[Persons.Length - 1];
+            int Counter = 0;
+
+            for (int i = 0; i < Persons.Length; i++)
+            {
+                if (i == IndexToDelete) continue;
+                Output[Counter] = Persons[i];
+                Counter++;
+            }
+            Persons = Output;
+            return Persons;
+        }
+
+        //Метод для поиска по индексу
+        public Person SearchFromIndex(int IndexToSearch)
+        {
+            if (IndexToSearch <= Persons.Length) 
+            {
+                return Persons[IndexToSearch];
+            }
+            else return null;
+        }
+
+        //Метод для поиска индекса по запросу
+        public int ReturnTheIndex(string Request) 
+        {
+            for (int i = 0; i < Persons.Length; i++)
+            {
+                if (Persons[i].Name == Request || Persons[i].Surname == Request) return i;
+            }
+            return -1;
+        }
+
+        //Метод для очистки списка
+        public void Clear()
+        {
+            Array.Clear(Persons, 0, Persons.Length);
+            Array.Resize<Person>(ref Persons, 0);
+        }
+
+        //Метод для получения количества элементов в списке
+        public int GetTheNumberOfItems()
+        {
+            return Persons.Length;
+        }
+
+        //Метод для вывода списка в консоль
+        public void ListToConsole()
+        {
+            if (Persons.Length == 0) Console.WriteLine("Список пуст!");
+            foreach (Person p in Persons)
+            {
+                Person.PersonToConsole(p);
+            }
+            Console.WriteLine();
         }
 
 
 
-        // индексатор
+        // индексатор (пока не понятно зачем работает)
         public Person this[int index]
         {
             // Для получения объекта по индексу

@@ -17,14 +17,14 @@ namespace Lab1ConsoleApp
 
     public class Person
     {
-        
+
         public string Name { get; set; }
         public string Surname { get; set; }
         public byte Age { get; set; }
         public Gender Gender { get; set; }
-        
+
         //Конструктор класса
-        public Person(string n, string s, byte a, Gender g) { Name = n; Surname = s; Age = a;  Gender = g; }
+        public Person(string n, string s, byte a, Gender g) { Name = n; Surname = s; Age = a; Gender = g; }
 
         //Объект генерации
         private static Random RealRnd = new Random(DateTime.Now.Second);
@@ -55,14 +55,34 @@ namespace Lab1ConsoleApp
             Surname = Surnames[RealRnd.Next(0, 9)];
 
             //Генерация возраста
-            Age = Convert.ToByte(RealRnd.Next(18, 79));
+            Age = Convert.ToByte(RealRnd.Next(18, 59));
 
 
             //на снове получнных данных получаем объект Person
             Person RandomPerson = new Person(Name, Surname, Age, Gender);
             return RandomPerson;
-            
+
         }
-        
+
+        //Метод вывода персоны на экран
+        static public void PersonToConsole(Person Person)
+        {
+            Console.WriteLine("Name: {0}\tSur: {1}\tAge: {2}      Gender: {3}", Person.Name, Person.Surname, Person.Age, Person.Gender);
+        }
+
+        //Метод чтения персоны с клавиатуры
+        static public Person PersonInsert()
+        {
+            Console.Write("Name: ");
+            string Name = Console.ReadLine();
+            Console.Write("Sur: ");
+            string Surname = Console.ReadLine();
+            Console.Write("Age: ");
+            byte Age = Convert.ToByte(Console.ReadLine());
+            Console.Write("Gender: ");
+            var Gender = Enum.Parse(typeof(Gender), Console.ReadLine(), true);
+            Person Person = new Person(Name, Surname, Age, (Gender)Gender);
+            return Person;
+        }
     }
 }
