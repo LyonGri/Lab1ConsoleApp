@@ -17,14 +17,34 @@ namespace Lab1ConsoleApp
 
     public class Person
     {
+        private byte _age;
 
         public string Name { get; set; }
         public string Surname { get; set; }
-        public byte Age { get; set; }
+
+        public byte Age
+        {
+            get => _age;
+            private set
+            {
+                const byte maximumValue = 150;
+                if (value >= maximumValue)
+                {
+                    throw new ArgumentException($"{nameof(Age)} should be less than {maximumValue}!");
+                }
+                _age = value;
+            }
+        }
         public Gender Gender { get; set; }
 
         //Конструктор класса
-        public Person(string n, string s, byte a, Gender g) { Name = n; Surname = s; Age = a; Gender = g; }
+        public Person(string n, string s, byte a, Gender g)
+        {
+            Name = n; 
+            Surname = s; 
+            Age = a; 
+            Gender = g;
+        }
 
         //Объект генерации
         private static Random RealRnd = new Random(DateTime.Now.Second);

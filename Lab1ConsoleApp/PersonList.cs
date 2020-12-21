@@ -10,6 +10,7 @@ namespace Lab1ConsoleApp
     {
         //Описание абстракции списка содержащего объекты класса Person
         public Person[] Persons;
+
         public PersonList()
         {
             Persons = new Person[0];
@@ -58,7 +59,10 @@ namespace Lab1ConsoleApp
         {
             for (int i = 0; i < Persons.Length; i++)
             {
-                if (Persons[i].Name == Request || Persons[i].Surname == Request) return i;
+                if (Persons[i].Name == Request || Persons[i].Surname == Request)
+                {
+                    return i;
+                }
             }
             return -1;
         }
