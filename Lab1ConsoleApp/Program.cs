@@ -8,8 +8,14 @@ namespace Lab1ConsoleApp
 {
     class Program
     {
+
         static void Main(string[] args)
         {
+
+            //Person pip = new Person("фыва-asЫВАdf", "asdf", 12, Gender.Female);
+
+
+
             //a. Создайте программно два списка персон, в каждом из которых будет по три человека
             PersonList PersonListOne = new PersonList();
             PersonList PersonListTwo = new PersonList();
@@ -18,6 +24,9 @@ namespace Lab1ConsoleApp
                 PersonListOne.PersonAdd(Person.GetRandomPerson());
                 PersonListTwo.PersonAdd(Person.GetRandomPerson());
             }
+
+
+            
 
             //b.Выведите содержимое каждого списка на экран с соответствующими подписями списков
             Console.WriteLine("Первый список персон");
