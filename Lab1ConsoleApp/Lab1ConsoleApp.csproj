@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Randomizer.cs" />
     <Compile Include="PersonList.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />

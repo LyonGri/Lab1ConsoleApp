@@ -43,7 +43,7 @@ namespace Lab1ConsoleApp
 				Regex letterRegex = new Regex(letterPattern);
 				Regex hyphenRegex = new Regex(hyphenPattern);
 				if (letterRegex.IsMatch(value.ToLower()) == true ||
-					hyphenRegex.Match(value.ToLower()).Length > 1)
+					hyphenRegex.Matches(value.ToLower()).Count > 1)
 				{
 					throw new ArgumentException($"{nameof(Name)} incorrect!");
 				}
@@ -68,7 +68,7 @@ namespace Lab1ConsoleApp
 				Regex letterRegex = new Regex(letterPattern);
 				Regex hyphenRegex = new Regex(hyphenPattern);
 				if (letterRegex.IsMatch(value.ToLower()) == true ||
-					hyphenRegex.Match(value.ToLower()).Length > 1)
+					hyphenRegex.Matches(value.ToLower()).Count > 1)
 				{
 					throw new ArgumentException($"{nameof(Name)} incorrect!");
 				}
@@ -136,51 +136,21 @@ namespace Lab1ConsoleApp
 			Gender = gender;
 		}
 
-		//Объект генерации
-		private static Random RealRnd = new Random(DateTime.Now.Second);
 
-		//Метод для генерация случайной персоны
-		static public Person GetRandomPerson()
-		{
-			//Пул имен и фамилий
-			string[] maleNames = new string[10] { "Ayten", "Sanjay", "Luther", "Allen", "Dominic", "Brett", "Bradford", "Julian", "Kenny", "Sam" };
-			string[] femaleNames = new string[10] { "Maria", "Lydia", "Meghan", "Gloria", "Dixie", "Rita", "Kelley", "Wilma", "Silvia", "Lee" };
-			string[] surnames = new string[10] { "Jones", "Miller", "Daniels", "Gibbs", "Sanders", "Potter", "Rhodes", "Lamb", "Sims", "Jordan" };
+	
 
-			//Переменные в которых хранятся сгенерированные значения
-			string name;
-			string surname;
-			byte age;
-			Gender gender;
-
-			//Генерация пола
-			if (RealRnd.Next(1, 3) == 1) { gender = Gender.Male; }
-			else { gender = Gender.Female; }
-
-			//Имя генерируется в зависимости от пола
-			if (gender == Gender.Male) { name = maleNames[RealRnd.Next(0, 9)]; }
-			else { name = femaleNames[RealRnd.Next(0, 9)]; }
-
-			//Генерация фамилии
-			surname = surnames[RealRnd.Next(0, 9)];
-
-			//Генерация возраста
-			age = Convert.ToByte(RealRnd.Next(18, 59));
-
-
-			//на снове получнных данных получаем объект Person
-			Person RandomPerson = new Person(name, surname, age, gender);
-			return RandomPerson;
-
-		}
-				
 		/// <summary>
-		/// Метод вывода персоны на экран
+		/// Метод вывода персоны 
 		/// </summary>
 		/// <param name="Person"></param>
-		static public void PersonToConsole(Person Person)
+		/// <returns>Персона в виде строки</returns>
+		public string PersonToConsole()
 		{
-			Console.WriteLine("Name: {0}\tSur: {1}\tAge: {2}      Gender: {3}", Person.Name, Person.Surname, Person.Age, Person.Gender);
+		
+			return "Name: " + Name + "\tSur: " + Surname + "\tAge: " + Age + "\tGender: " + Gender;
+			 
+				//("Name: {0}\tSur: {1}\tAge: {2}      Gender: {3}", 
+				//Person.Name, Person.Surname, Person.Age, Person.Gender)";
 		}
 				
 		/// <summary>
