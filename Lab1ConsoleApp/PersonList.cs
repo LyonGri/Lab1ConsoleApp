@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Lab1ConsoleApp
 {
+	/// <summary>
+	/// Описывает список персон
+	/// </summary>
 	class PersonList
 	{
 		/// <summary>
@@ -25,7 +28,7 @@ namespace Lab1ConsoleApp
 		/// <summary>
 		/// Добавление новых Person в список
 		/// </summary>
-		/// <param name="Person"></param>
+		/// <param name="person">Персона для добавления</param>
 		public void PersonAdd(Person person)
 		{ 
 			Array.Resize<Person>(ref _persons, _persons.Length + 1);
@@ -35,31 +38,52 @@ namespace Lab1ConsoleApp
 		/// <summary>
 		/// Удаление элемента по индексу
 		/// </summary>
-		/// <param name="IndexToDelete"></param>
-		/// <returns></returns>
-		public void PersonDelete(int IndexToDelete)
+		/// <param name="indexToDelete">Индекс персоны для удаления</param>
+		public void PersonDeleteByIndex(int indexToDelete)
 		{
-			// Проверки, что наш массив не пуст и что указанный индекс существует.
-			if ((_persons.Length != 0) && (_persons.Length >= IndexToDelete))
+			if ((_persons.Length != 0) && (_persons.Length >= indexToDelete))
 			{
 				var output = new Person[_persons.Length - 1];
 				int counter = 0;
-
 				for (int i = 0; i < _persons.Length; i++)
 				{
-					if (i == IndexToDelete) continue;
+					if (i == indexToDelete) continue;
 					output[counter] = _persons[i];
 					counter++;
 				}
 				_persons = output;
 			}
+		}
 
+		/// <summary>
+		/// Удаление элемента по имени
+		/// </summary>
+		/// <param name="nameToDelete">Имя или фамилия персоны</param>
+		public void PersonDeleteByName(string nameToDelete)
+		{
+			if ((_persons.Length != 0) && (nameToDelete != null))
+			{
+				var output = new Person[0];
+				int counter = 0;
+				int indexName;
+				int indexSurname;
+				for (int i = 0; i < _persons.Length; i++)
+				{
+					indexName = _persons[i].Name.ToLower().IndexOf(nameToDelete.ToLower());
+					indexSurname = _persons[i].Surname.ToLower().IndexOf(nameToDelete.ToLower());
+					if (indexName > -1 || indexSurname > -1) continue;
+					Array.Resize<Person>(ref output, output.Length + 1);
+					output[counter] = _persons[i];
+					counter++;
+				}
+				_persons = output;
+			}
 		}
 
 		/// <summary>
 		/// Поиск по индексу
 		/// </summary>
-		/// <param name="indexToSearch"></param>
+		/// <param name="indexToSearch">Идекс для поиска</param>
 		/// <returns>Значение соответствующее индексу</returns>
 		public Person SearchFromIndex(int indexToSearch)
 		{
@@ -70,18 +94,18 @@ namespace Lab1ConsoleApp
 			else return null;
 		}
 
-		//Метод для поиска индекса по запросу
 		/// <summary>
 		/// Поиск индекса по запросу
 		/// </summary>
-		/// <param name="request"></param>
+		/// <param name="request">Имя для поиска</param>
 		/// <returns>Массив индексов соответствующих запросу</returns>
 		public int[] ReturnTheIndex(string request) 
 		{
 			int[] indexes = new int[0];
 			for (int i = 0; i < _persons.Length; i++)
 			{
-				if (_persons[i].Name == request || _persons[i].Surname == request)
+				if (_persons[i].Name.ToLower().IndexOf(request.ToLower()) > -1 
+					|| _persons[i].Surname.ToLower().IndexOf(request.ToLower()) > -1)
 				{
 					Array.Resize<int>(ref indexes, indexes.Length+1);
 					indexes[i] = i;
@@ -90,7 +114,6 @@ namespace Lab1ConsoleApp
 			return indexes;
 		}
 
-		//
 		/// <summary>
 		/// Метод для очистки списка
 		/// </summary>
@@ -109,24 +132,33 @@ namespace Lab1ConsoleApp
 			return _persons.Length;
 		}
 
-
-
-		// индексатор (пока не понятно зачем работает)
 		/// <summary>
 		/// Индексатор
 		/// </summary>
-		/// <param name="index"></param>
+		/// <param name="index">Индекс</param>
 		/// <returns>Индекс записи</returns>
 		public Person this[int index]
 		{
 			// Для получения объекта по индексу
 			get
 			{
+				int maximumValue = _persons.Length;
+				int minimumValue = 0;
+				if ((index < minimumValue) || (index > maximumValue))
+				{
+					throw new ArgumentException($"{nameof(index)} out of range!");
+				}
 				return _persons[index];
 			}
 			//В блоке set получаем через параметр value переданный объект Person и сохраняем его в list по индексу
-			set
+			private set
 			{
+				int minimumValue = 0;
+				if (index < minimumValue)
+					if (((index < minimumValue)))
+				{
+					throw new ArgumentException($"{nameof(index)} out of range!");
+				}
 				_persons[index] = value;
 			}
 		}

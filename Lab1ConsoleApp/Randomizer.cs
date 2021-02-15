@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace Lab1ConsoleApp
 {
-    class Randomizer
-    {
-        //Объект генерации
+	/// <summary>
+	/// Генератор случайностей
+	/// </summary>
+	class Randomizer
+	{
+		//Объект генерации
 		//
-        private static Random RealRnd = new Random(DateTime.Now.Second);
+		private static Random RealRnd = new Random(DateTime.Now.Second);
 
 		/// <summary>
 		/// Метод для генерация случайной персоны
@@ -32,10 +35,32 @@ namespace Lab1ConsoleApp
 				"Kenny",
 				"Sam"
 			};
-			string[] femaleNames = new string[10] { "Maria", "Lydia", "Meghan",
-				"Gloria", "Dixie", "Rita", "Kelley", "Wilma", "Silvia", "Lee" };
-			string[] surnames = new string[10] { "Jones", "Miller", "Daniels",
-				"Gibbs", "Sanders", "Potter", "Rhodes", "Lamb", "Sims", "Jordan" };
+			string[] femaleNames = new string[10] 
+			{ 
+				"Maria", 
+				"Lydia", 
+				"Meghan",
+				"Gloria", 
+				"Dixie", 
+				"Rita", 
+				"Kelley", 
+				"Wilma", 
+				"Silvia", 
+				"Lee" 
+			};
+			string[] surnames = new string[10] 
+			{ 
+				"Jones", 
+				"Miller", 
+				"Daniels",
+				"Gibbs", 
+				"Sanders", 
+				"Potter", 
+				"Rhodes", 
+				"Lamb", 
+				"Sims", 
+				"Jordan" 
+			};
 
 			//Переменные в которых хранятся сгенерированные значения
 			string name;

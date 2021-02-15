@@ -19,7 +19,7 @@ public enum Gender : byte
 namespace Lab1ConsoleApp
 {
 	/// <summary>
-	/// Класс Person
+	/// Описывает person
 	/// </summary>
 	public class Person
 	{
@@ -136,9 +136,6 @@ namespace Lab1ConsoleApp
 			Gender = gender;
 		}
 
-
-	
-
 		/// <summary>
 		/// Метод вывода персоны 
 		/// </summary>
@@ -153,22 +150,14 @@ namespace Lab1ConsoleApp
 				//Person.Name, Person.Surname, Person.Age, Person.Gender)";
 		}
 				
-		/// <summary>
-		/// Метод чтения персоны с клавиатуры
-		/// </summary>
-		/// <returns>Экземпляр персоны введенной с клавиатуры</returns>
-		static public Person PersonInsert()
-		{
-			Console.Write("Name: ");
-			string Name = Console.ReadLine();
-			Console.Write("Sur: ");
-			string Surname = Console.ReadLine();
-			Console.Write("Age: ");
-			byte Age = Convert.ToByte(Console.ReadLine());
-			Console.Write("Gender: ");
-			var Gender = Enum.Parse(typeof(Gender), Console.ReadLine(), true);
-			Person Person = new Person(Name, Surname, Age, (Gender)Gender);
-			return Person;
-		}
+		///// <summary>
+		///// Метод чтения персоны с клавиатуры
+		///// </summary>
+		///// <returns>Экземпляр персоны введенной с клавиатуры</returns>
+		//static public Person PersonInsert(string name, string surname, byte age, Gender gender)
+		//{
+		//	Person Person = new Person(name, surname, age, gender);
+		//	return Person;
+		//}
 	}
 }
