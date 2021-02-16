@@ -80,7 +80,7 @@ namespace Lab1ConsoleApp
 			ListToConsole(personListTwo);
 			Console.ReadKey();
 
-
+			
 			//Блок для тестирования
 			//
 			//Person egor = new Person("егорка-ПОМИДОРка", "asdf", 12, Gender.Female);

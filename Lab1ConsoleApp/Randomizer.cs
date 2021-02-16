@@ -13,7 +13,7 @@ namespace Lab1ConsoleApp
 	{
 		//Объект генерации
 		//
-		private static Random RealRnd = new Random(DateTime.Now.Second);
+		private static Random _realRnd = new Random(DateTime.Now.Second);
 
 		/// <summary>
 		/// Метод для генерация случайной персоны
@@ -69,18 +69,30 @@ namespace Lab1ConsoleApp
 			Gender gender;
 
 			//Генерация пола
-			if (RealRnd.Next(1, 3) == 1) { gender = Gender.Male; }
-			else { gender = Gender.Female; }
+			if (_realRnd.Next(1, 3) == 1) 
+			{ 
+				gender = Gender.Male; 
+			}
+			else 
+			{ 
+				gender = Gender.Female; 
+			}
 
 			//Имя генерируется в зависимости от пола
-			if (gender == Gender.Male) { name = maleNames[RealRnd.Next(0, 9)]; }
-			else { name = femaleNames[RealRnd.Next(0, 9)]; }
+			if (gender == Gender.Male)
+			{
+				name = maleNames[_realRnd.Next(0, 9)];
+			}
+			else
+			{
+				name = femaleNames[_realRnd.Next(0, 9)];
+			}
 
 			//Генерация фамилии
-			surname = surnames[RealRnd.Next(0, 9)];
+			surname = surnames[_realRnd.Next(0, 9)];
 
 			//Генерация возраста
-			age = Convert.ToByte(RealRnd.Next(18, 59));
+			age = Convert.ToByte(_realRnd.Next(18, 59));
 
 
 			//на основе получнных данных получаем объект Person

@@ -114,7 +114,8 @@ namespace Lab1ConsoleApp
 		/// Пол
 		/// </summary>
 		public Gender Gender 
-		{ get => _gender;
+		{ 
+			get => _gender;
 			private set
 			{
 				_gender = value;
@@ -122,7 +123,7 @@ namespace Lab1ConsoleApp
 		}
 
 		/// <summary>
-		/// Конструктор класса
+		/// Конструктор класса Person
 		/// </summary>
 		/// <param name="name">Имя</param>
 		/// <param name="surname">Фамилия</param>
