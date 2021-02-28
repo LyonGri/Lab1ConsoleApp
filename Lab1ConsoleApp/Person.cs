@@ -33,6 +33,7 @@ namespace Lab1ConsoleApp
 			get => _name;
 			private set
 			{
+				//TODO: Дубль
 				//сначала все символы приведятся к строчным
 				//затем формируется 2 регулярных выражения
 				//letterRegex отбирает все что не соответствет буквам и дефису
@@ -63,6 +64,7 @@ namespace Lab1ConsoleApp
 			get => _surname;
 			private set
 			{
+				//TODO: Дубль
 				const string letterPattern = @"[^a-z^а-я^A-Z^А-Я^-]";
 				const string hyphenPattern = @"-";
 				Regex letterRegex = new Regex(letterPattern);

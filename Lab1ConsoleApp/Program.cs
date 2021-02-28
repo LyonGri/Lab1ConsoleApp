@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab1ConsoleApp
 {
-	class Program
+	internal class Program
 	{
 		/// <summary>
 		/// Метод для вывода списка в консоль
@@ -14,6 +14,7 @@ namespace Lab1ConsoleApp
 		/// <param name="personList">Лист для вывода</param>
 		static public void ListToConsole(PersonList personList)
 		{
+			//TODO: скобочки
 			if (personList.Count() == 0) 
 				Console.WriteLine("Список пуст!");
 			for (int i = 0; i < personList.Count(); i++)

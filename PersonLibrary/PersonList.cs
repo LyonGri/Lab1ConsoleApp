@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lab1ConsoleApp
+namespace PersonLibrary
 {
 	/// <summary>
 	/// Описывает список персон
@@ -30,7 +30,7 @@ namespace Lab1ConsoleApp
 		/// </summary>
 		/// <param name="person">Персона для добавления</param>
 		public void PersonAdd(Person person)
-		{ 
+		{
 			Array.Resize<Person>(ref _persons, _persons.Length + 1);
 			_persons[_persons.Length - 1] = person;
 		}
@@ -57,22 +57,23 @@ namespace Lab1ConsoleApp
 		}
 
 		/// <summary>
-		/// Удаление элемента по имени
+		/// Удаление элемента по имени или фамилии
 		/// </summary>
 		/// <param name="nameToDelete">Имя или фамилия персоны</param>
-		public void PersonDeleteByName(string nameToDelete)
+		public void DeletePersonByName(string nameToDelete)
 		{
 			if ((_persons.Length != 0) && (nameToDelete != null))
 			{
 				var output = new Person[0];
 				int counter = 0;
-				int indexName;
-				int indexSurname;
+				//int indexName;
+				//int indexSurname;
 				for (int i = 0; i < _persons.Length; i++)
 				{
-					indexName = _persons[i].Name.ToLower().IndexOf(nameToDelete.ToLower());
-					indexSurname = _persons[i].Surname.ToLower().IndexOf(nameToDelete.ToLower());
-					if (indexName > -1 || indexSurname > -1) continue;
+					//indexName = _persons[i].Name.ToLower().IndexOf(nameToDelete.ToLower());
+					//indexSurname = _persons[i].Surname.ToLower().IndexOf(nameToDelete.ToLower());
+					if (_persons[i].Name.ToLower() == nameToDelete.ToLower()
+						|| _persons[i].Surname.ToLower() == nameToDelete.ToLower()) continue;
 
 					Array.Resize<Person>(ref output, output.Length + 1);
 					output[counter] = _persons[i];
@@ -87,9 +88,9 @@ namespace Lab1ConsoleApp
 		/// </summary>
 		/// <param name="indexToSearch">Идекс для поиска</param>
 		/// <returns>Значение соответствующее индексу</returns>
-		public Person SearchFromIndex(int indexToSearch)
+		public Person SearchByIndex(int indexToSearch)
 		{
-			if (indexToSearch <= _persons.Length) 
+			if (indexToSearch <= _persons.Length)
 			{
 				return _persons[indexToSearch];
 			}
@@ -99,17 +100,17 @@ namespace Lab1ConsoleApp
 		/// <summary>
 		/// Поиск индекса по запросу
 		/// </summary>
-		/// <param name="request">Имя для поиска</param>
+		/// <param name="name">Имя для поиска</param>
 		/// <returns>Массив индексов соответствующих запросу</returns>
-		public int[] ReturnTheIndex(string request) 
+		public int[] ReturnTheIndex(string name)
 		{
 			int[] indexes = new int[0];
 			for (int i = 0; i < _persons.Length; i++)
 			{
-				if (_persons[i].Name.ToLower().IndexOf(request.ToLower()) > -1 
-					|| _persons[i].Surname.ToLower().IndexOf(request.ToLower()) > -1)
+				if (_persons[i].Name.ToLower().IndexOf(name.ToLower()) > -1
+					|| _persons[i].Surname.ToLower().IndexOf(name.ToLower()) > -1)
 				{
-					Array.Resize<int>(ref indexes, indexes.Length+1);
+					Array.Resize<int>(ref indexes, indexes.Length + 1);
 					indexes[i] = i;
 				}
 			}
@@ -125,14 +126,13 @@ namespace Lab1ConsoleApp
 			Array.Resize<Person>(ref _persons, 0);
 		}
 
-		//TODO: В свойство
+		//TODO: В свойство +
 		/// <summary>
-		/// Количества элементов в списке
+		/// Количество элементов в списке
 		/// </summary>
-		/// <returns>Количество элементов в списке</returns>
-		public int Count()
+		public int Count
 		{
-			return _persons.Length;
+			get => _persons.Length;
 		}
 
 		/// <summary>
@@ -159,9 +159,9 @@ namespace Lab1ConsoleApp
 				int minimumValue = 0;
 				if (index < minimumValue)
 					if (((index < minimumValue)))
-				{
-					throw new ArgumentException($"{nameof(index)} out of range!");
-				}
+					{
+						throw new ArgumentException($"{nameof(index)} out of range!");
+					}
 				_persons[index] = value;
 			}
 		}

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lab1ConsoleApp
+namespace PersonLibrary
 {
 	/// <summary>
 	/// Генератор случайностей
 	/// </summary>
-	static class Randomizer
+	public static class Randomizer
 	{
 		//Объект генерации
 		//
@@ -22,7 +22,7 @@ namespace Lab1ConsoleApp
 		static public Person GetRandomPerson()
 		{
 			//Пул имен и фамилий
-			string[] maleNames = new string[10]
+			List<string> maleNames = new List<string>()
 			{
 				"Ayten",
 				"Sanjay",
@@ -35,20 +35,20 @@ namespace Lab1ConsoleApp
 				"Kenny",
 				"Sam"
 			};
-			string[] femaleNames = new string[10] 
-			{ 
-				"Maria", 
-				"Lydia", 
+			List<string> femaleNames = new List<string>()
+			{
+				"Maria",
+				"Lydia",
 				"Meghan",
-				"Gloria", 
-				"Dixie", 
-				"Rita", 
-				"Kelley", 
-				"Wilma", 
-				"Silvia", 
-				"Lee" 
+				"Gloria",
+				"Dixie",
+				"Rita",
+				"Kelley",
+				"Wilma",
+				"Silvia",
+				"Lee"
 			};
-			string[] surnames = new string[10] 
+			List<string> surnames = new List<string>()
 			{ 
 				"Jones", 
 				"Miller", 
@@ -79,15 +79,15 @@ namespace Lab1ConsoleApp
 			//Имя генерируется в зависимости от пола
 			if (gender == Gender.Male)
 			{
-				name = maleNames[_realRnd.Next(0, maleNames.Length)];
+				name = maleNames[_realRnd.Next(0, maleNames.Count)];
 			}
 			else
 			{
-				name = femaleNames[_realRnd.Next(0, 9)];
+				name = femaleNames[_realRnd.Next(0, femaleNames.Count)];
 			}
 
 			//Генерация фамилии
-			string surname = surnames[_realRnd.Next(0, 9)];
+			string surname = surnames[_realRnd.Next(0, surnames.Count)];
 
 			//Генерация возраста
 			byte age = Convert.ToByte(_realRnd.Next(18, 59));
