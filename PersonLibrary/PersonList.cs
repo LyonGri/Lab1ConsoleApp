@@ -66,12 +66,9 @@ namespace PersonLibrary
 			{
 				var output = new Person[0];
 				int counter = 0;
-				//int indexName;
-				//int indexSurname;
+				//TODO: Убрать комментарии +
 				for (int i = 0; i < _persons.Length; i++)
 				{
-					//indexName = _persons[i].Name.ToLower().IndexOf(nameToDelete.ToLower());
-					//indexSurname = _persons[i].Surname.ToLower().IndexOf(nameToDelete.ToLower());
 					if (_persons[i].Name.ToLower() == nameToDelete.ToLower()
 						|| _persons[i].Surname.ToLower() == nameToDelete.ToLower()) continue;
 
@@ -94,7 +91,10 @@ namespace PersonLibrary
 			{
 				return _persons[indexToSearch];
 			}
-			else return null;
+			else 
+			{
+				return null;
+			}
 		}
 
 		/// <summary>
@@ -126,7 +126,6 @@ namespace PersonLibrary
 			Array.Resize<Person>(ref _persons, 0);
 		}
 
-		//TODO: В свойство +
 		/// <summary>
 		/// Количество элементов в списке
 		/// </summary>
@@ -142,27 +141,28 @@ namespace PersonLibrary
 		/// <returns>Индекс записи</returns>
 		public Person this[int index]
 		{
-			// Для получения объекта по индексу
 			get
 			{
 				int maximumValue = _persons.Length;
 				int minimumValue = 0;
 				if ((index < minimumValue) || (index > maximumValue))
 				{
-					throw new ArgumentException($"{nameof(index)} out of range!");
+					throw new ArgumentException($"{nameof(index)} Выход за допустимые пределы!");
 				}
 				return _persons[index];
 			}
-			//В блоке set получаем через параметр value переданный объект Person и сохраняем его в list по индексу
 			private set
 			{
 				int minimumValue = 0;
+				//TODO: Скобочки +
 				if (index < minimumValue)
+				{
 					if (((index < minimumValue)))
 					{
-						throw new ArgumentException($"{nameof(index)} out of range!");
+						throw new ArgumentException($"{nameof(index)} Выход за допустимые пределы!");
 					}
-				_persons[index] = value;
+					_persons[index] = value;
+				}
 			}
 		}
 	}

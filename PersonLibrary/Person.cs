@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
+//TODO: Кириллица! +
 /// <summary>
 /// Гендерная идентичность
 /// </summary>
@@ -28,13 +29,12 @@ namespace PersonLibrary
 		/// <summary>
 		/// Имя
 		/// </summary>
-		public string Name 
+		public string Name
 		{
 			get => _name;
-			private set
+			set
 			{
-				//TODO: Дубль +
-				_name = ValidationName(value);
+				_name = ValidateName(value);
 			}
 		}
 
@@ -46,10 +46,9 @@ namespace PersonLibrary
 		public string Surname
 		{
 			get => _surname;
-			private set
+			set
 			{
-				//TODO: Дубль +
-				_surname = ValidationName(value);
+				_surname = ValidateName(value);
 			}
 		}
 
@@ -61,9 +60,22 @@ namespace PersonLibrary
 		public byte Age
 		{
 			get => _age;
-			private set
+			set
 			{
-				_age = ValidationAge(value);
+				const string pattern = @"\D";
+				Regex regex = new Regex(pattern);
+				if (regex.IsMatch(value.ToString()) == true)
+				{
+					throw new ArgumentException("Возраст должен быть числом!");
+				}
+				const byte maximumValue = 122;
+				const byte minimumValue = 0;
+				if ((value > maximumValue) || (value <= minimumValue))
+				{
+					throw new ArgumentException("Возраст должен быть больше чем " +
+						$"{minimumValue} и меньше либо равен {maximumValue}!");
+				}
+				_age = value;
 			}
 			
 		}
@@ -76,7 +88,7 @@ namespace PersonLibrary
 		public Gender Gender 
 		{ 
 			get => _gender;
-			private set
+			set
 			{
 				_gender = value;
 			}
@@ -97,14 +109,18 @@ namespace PersonLibrary
 			Gender = gender;
 		}
 
+        /// <summary>
+        /// Конструктор со значениями по умолчанию
+        /// </summary>
+        public Person() : this("Неизвестно", "Неизвестно", 18, Gender.Male) {  }
+
+		//TODO: В info + свойство +
 		/// <summary>
-		/// Метод вывода персоны 
+		/// Данные о персоне
 		/// </summary>
-		/// <param name="Person"></param>
-		/// <returns>Персона в виде строки</returns>
-		public string PersonInfo()
+        public string Info
 		{
-			return "Name: " + Name + "\tSurname: " + Surname + "\tAge: " + Age + "\tGender: " + Gender;
+			get => $"Имя: {Name} \tФамилия: {Surname} \tВозраст: {Age} \tПол: {GenderRus(Gender)}";
 		}
 
 		/// <summary>
@@ -112,47 +128,34 @@ namespace PersonLibrary
 		/// </summary>
 		/// <param name="expression">Строка для проверки</param>
 		/// <returns>Проверенная строка отформатированная в соответствии с правописанием</returns>
-		public static string ValidationName(string expression)
+		private static string ValidateName(string expression)
         {
 			if (expression == "" || expression == null)
 			{
-				throw new ArgumentException("The field must not be empty!");
+				throw new ArgumentException("Это поле не должно быть пустым!");
 			}
-			const string letterPattern = @"[^a-z^а-я^A-Z^А-Я^-]";
+			const string letterPattern = @"[^а-я^ё^А-Я^Ё^-]";
 			const string hyphenPattern = @"-";
 			Regex letterRegex = new Regex(letterPattern);
 			Regex hyphenRegex = new Regex(hyphenPattern);
 			if (letterRegex.IsMatch(expression.ToLower()) == true ||
 				hyphenRegex.Matches(expression.ToLower()).Count > 1)
 			{
-				throw new ArgumentException("The field is filled in incorrectly.");
+				throw new ArgumentException("Поле заполнено некорректно.");
 			}
 			return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(expression.ToLower());
 		}
 
 		/// <summary>
-		/// Проверка возраста
+		/// Преобразование пола в русский язык
 		/// </summary>
-		/// <param name="expression">Переменная для проверки</param>
-		/// <returns>Проверенный возраст</returns>
-		public static byte ValidationAge(byte expression)
-		{
-			//этот метод реализован для удобства проверок извне
-			//
-			const string pattern = @"\D";
-			Regex regex = new Regex(pattern);
-			if (regex.IsMatch(expression.ToString()) == true)
-			{
-				throw new ArgumentException($"{nameof(Age)} should be a number!");
-			}
-			const byte maximumValue = 122;
-			const byte minimumValue = 0;
-			if ((expression > maximumValue) || (expression <= minimumValue))
-			{
-				throw new ArgumentException($"{nameof(Age)} should be greater then " +
-					$"{minimumValue} and less than {maximumValue}!");
-			}
-			return expression;
+		/// <param name="gender">Gender перосоны</param>
+		/// <returns>Пол на русском языке</returns>
+		private static string GenderRus(Gender gender)
+        {
+			 return gender == Gender.Male
+				? "Мужчина"
+				: "Женщина";
 		}
 	}
 }

@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PersonLibrary;
 
-
 namespace UI
 {
 	/// <summary>
@@ -22,85 +21,108 @@ namespace UI
 		static public void ListToConsole(PersonList personList, string message)
 		{
 			Console.WriteLine(message);
-			//TODO: скобочки +
 			if (personList.Count == 0)
 			{
-				Console.WriteLine("The list is empty!");
+				Console.WriteLine("Список пуст!");
 			}
 			for (int i = 0; i < personList.Count; i++)
 			{
-				Console.WriteLine(personList[i].PersonInfo());
+				Console.WriteLine(personList[i].Info);
 			}
 			Console.WriteLine();
 		}
-		/// <summary>
-		/// Проверка корректности введенного имени либо фамилии
-		/// </summary>
-		/// <param name="line">Строка для вывода в консоли</param>
-		/// <returns>Имя либо фамилию, если оно введено корректно</returns>
-		private static string CheckInputName(string line)
-		{
-			try
-			{
-				Console.Write(line);
-				return Person.ValidationName(Console.ReadLine());
-			}
-			catch (Exception exception)
-			{
-				Console.WriteLine($"{exception.Message} Try again.");
-				return CheckInputName(line);
-			}
-		}
-		/// <summary>
-		/// Проверка корректности ввода возраста
-		/// </summary>
-		/// <param name="line">Строка для вывода в консоли</param>
-		/// <returns>Возраст, если он введен корректно</returns>
-		private static byte CheckInputAge(string line)
-		{
-			try
-			{
-				Console.Write(line);
-				return Person.ValidationAge(Byte.Parse(Console.ReadLine()));
-			}
-			catch (Exception exception)
-			{
-				Console.WriteLine($"{exception.Message} Try again.");
-				return CheckInputAge(line);
-			}
-		}
 
+		//TODO +
 		/// <summary>
-		/// Проверка корректности ввода пола
+		/// Метод для проверки ввода персоны
 		/// </summary>
-		/// <param name="line">Строка для вывода в консоли</param>
-		/// <returns>Пол, если он введен корректно</returns>
-		private static Gender CheckInputGender(string line)
+		/// <param name="outputMessage">Строка для вывода в консоль</param>
+		/// <param name="validationAction">Делегат с заданием параметра</param>
+		private static void ValidateInput(string outputMessage, Action validationAction)
 		{
-			try
+			while(true)
 			{
-				Console.Write(line);
-				switch (Console.ReadLine())
+				try
 				{
-					case "M":
-						return Gender.Male;
-					case "m":
-						return Gender.Male;
-					case "F":
-						return Gender.Female;
-					case "f":
-						return Gender.Female;
-					default:
-						throw new ArgumentException("You need to choose 'M' or 'F'");
+					Console.Write(outputMessage);
+					validationAction();
+					return;
+				}
+				catch (Exception exception)
+				{
+					Console.WriteLine($"{exception.Message} Попробуйте снова.");
 				}
 			}
-			catch (Exception exception)
-			{
-				Console.WriteLine($"{exception.Message} Try again.");
-				return CheckInputGender(line);
-			}
 		}
 
+		/// <summary>
+		/// Метод для ввода персоны с клавиатуры
+		/// </summary>
+		/// <returns>Персона введенная с клавиатуры</returns>
+		private static Person InputPerson()
+		{
+			Console.WriteLine("Введите данные о новой персоне на русском языке");
+			Person person = new Person();
+			var validationActions = new List<Tuple<string, Action>>()
+			{
+				new Tuple<string, Action>
+				(
+					"Имя: ", 
+					() => 
+					{
+						person.Name = Console.ReadLine();
+					}
+				),
+				new Tuple<string, Action>
+				(
+					"Фамилия: ", 
+					() => 
+					{
+						person.Surname = Console.ReadLine();
+					}
+				),
+				new Tuple<string, Action>
+				(
+					"Возраст: ", 
+					() => 
+					{
+						person.Age = Byte.Parse(Console.ReadLine());
+					}
+				),
+				new Tuple<string, Action>
+				(
+					"Пол (М/Ж): ", 
+					() => 
+					{
+						switch (Console.ReadLine())
+						{
+							case "М":
+							case "м":
+							{
+								person.Gender = Gender.Male;
+								break;
+							}
+							case "Ж":
+							case "ж":
+							{
+								person.Gender = Gender.Female;
+								break;
+							}
+							default:
+							{
+								throw new ArgumentException("Вам нужно выбрать 'М' или 'Ж'");
+							}
+						}
+					}
+				),
+			};
+
+			foreach (var actionItem in validationActions)
+			{
+				ValidateInput(actionItem.Item1, actionItem.Item2);
+			}
+			return person;
+		}
 
 		/// <summary>
 		/// Тело программы
@@ -119,54 +141,51 @@ namespace UI
 
 			//b.Выведите содержимое каждого списка на экран с соответствующими 
 			//подписями списков
-			ListToConsole(personListOne, "First person list");
-			ListToConsole(personListTwo,"Second person list");
+			ListToConsole(personListOne, "Первый список персон");
+			ListToConsole(personListTwo, "Второй список персон");
 			Console.ReadKey();
 
 			//c. Добавьте нового человека в первый список
 			personListOne.PersonAdd(Randomizer.GetRandomPerson());
-			Console.WriteLine("Added a new person to the first list");
+			Console.WriteLine("Добавлена новая персона в первый список");
 			Console.WriteLine();
 			Console.ReadKey();
 
 			//d. Скопируйте второго человека из первого списка в конец второго списка.
 			//Покажите, что один и тот же человек находится в обоих списках
 			personListTwo.PersonAdd(personListOne.SearchByIndex(1));
-			Console.WriteLine("The second person from the first list was copied to the" +
-				" end of the second list");
+			Console.WriteLine("Вторая персона из первого списка скопирована" +
+				" в конец второго списка");
 			Console.WriteLine();
-			ListToConsole(personListOne, "First person list");
-			ListToConsole(personListTwo, "Second person list");
+			ListToConsole(personListOne, "Первый список персон");
+			ListToConsole(personListTwo, "Второй список персон");
 			Console.ReadKey();
 
 			//e. Удалите второго человека из первого списка.
 			//Покажите, что удаление человека из первого списка не привело
 			//к уничтожению этого же человека во втором списке
 			personListOne.PersonDeleteByIndex(1);
-			Console.WriteLine("The second person from the first list has been removed");
+			Console.WriteLine("Вторая персона из первого списка удалена");
 			Console.WriteLine();
-			ListToConsole(personListOne, "First person list");
-			ListToConsole(personListTwo, "Second person list");
+			ListToConsole(personListOne, "Первый список персон");
+			ListToConsole(personListTwo, "Второй список персон");
 			Console.ReadKey();
 
 			//f. Очистите второй список.
 			personListTwo.Clear();
-			Console.WriteLine("Second person list is cleared");
+			Console.WriteLine("Второй список персон очищен");
 			Console.WriteLine();
-			ListToConsole(personListTwo, "Second person list");
+			ListToConsole(personListTwo, "Второй список персон");
 			Console.ReadKey();
 
-			Console.Write("Press any key to go to person entry...");
+			Console.Write("Нажмите любую клавишу чтобы продолжить...");
 			Console.ReadKey();
 			Console.Clear();
 			while (true)
 			{
-				Console.WriteLine("Enter data about the person");
-				Person tobradex = new Person(CheckInputName("Name: "), 
-					CheckInputName("Surname: "), CheckInputAge("Age: "), 
-					CheckInputGender("Gender (M/F): "));
-				Console.WriteLine("Your person:");
-				Console.WriteLine(tobradex.PersonInfo());
+				Person chelovek = InputPerson();
+				Console.WriteLine("Ваша персона:");
+				Console.WriteLine(chelovek.Info);
 				Console.ReadKey();
 			}
 		}

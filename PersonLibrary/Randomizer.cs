@@ -11,8 +11,6 @@ namespace PersonLibrary
 	/// </summary>
 	public static class Randomizer
 	{
-		//Объект генерации
-		//
 		private static Random _realRnd = new Random(DateTime.Now.Second);
 
 		/// <summary>
@@ -21,8 +19,7 @@ namespace PersonLibrary
 		/// <returns>Экземпляр случайной персоны</returns>
 		static public Person GetRandomPerson()
 		{
-			//Пул имен и фамилий
-			List<string> maleNames = new List<string>()
+			List<string> engMaleNames = new List<string>()
 			{
 				"Ayten",
 				"Sanjay",
@@ -35,7 +32,7 @@ namespace PersonLibrary
 				"Kenny",
 				"Sam"
 			};
-			List<string> femaleNames = new List<string>()
+			List<string> engFemaleNames = new List<string>()
 			{
 				"Maria",
 				"Lydia",
@@ -48,7 +45,7 @@ namespace PersonLibrary
 				"Silvia",
 				"Lee"
 			};
-			List<string> surnames = new List<string>()
+			List<string> engSurnames = new List<string>()
 			{ 
 				"Jones", 
 				"Miller", 
@@ -61,41 +58,57 @@ namespace PersonLibrary
 				"Sims", 
 				"Jordan" 
 			};
-
-			//Переменные в которых хранятся сгенерированные значения
-			string name;
-			Gender gender;
-
-			//Генерация пола
-			if (_realRnd.Next(1, 3) == 1) 
-			{ 
-				gender = Gender.Male; 
-			}
-			else 
-			{ 
-				gender = Gender.Female; 
-			}
-
-			//Имя генерируется в зависимости от пола
-			if (gender == Gender.Male)
+			List<string> rusMaleNames = new List<string>()
 			{
-				name = maleNames[_realRnd.Next(0, maleNames.Count)];
-			}
-			else
+				"Алексей",
+				"Роман",
+				"Виктор",
+				"Тимофей",
+				"Максим",
+				"Дмитрий",
+				"Юрий",
+				"Кирилл",
+				"Артём",
+				"Иван"
+			};
+			List<string> rusFemaleNames = new List<string>()
 			{
-				name = femaleNames[_realRnd.Next(0, femaleNames.Count)];
-			}
-
-			//Генерация фамилии
-			string surname = surnames[_realRnd.Next(0, surnames.Count)];
-
-			//Генерация возраста
-			byte age = Convert.ToByte(_realRnd.Next(18, 59));
-
-
-			//на основе получнных данных получаем объект Person
+				"Мария",
+				"Карина",
+				"Юлия",
+				"Яна",
+				"Арина",
+				"Марина",
+				"Дарья",
+				"Кира",
+				"Евгения",
+				"Надежда"
+			};
+			List<string> rusSurnames = new List<string>()
+			{
+				"Лис",
+				"Миллер",
+				"Смитт",
+				"Этвуд",
+				"Блэк",
+				"Форд",
+				"Король",
+				"Вагнер",
+				"Киш",
+				"Кремер"
+			};
+			
+			var gender = _realRnd.Next(1, 3) == 1 
+				? Gender.Male 
+				: Gender.Female;
+			
+			var name = gender == Gender.Male
+				? rusMaleNames[_realRnd.Next(0, rusMaleNames.Count)]
+				: rusFemaleNames[_realRnd.Next(0, rusFemaleNames.Count)];
+			
+			var surname = rusSurnames[_realRnd.Next(0, rusSurnames.Count)];
+			var age = Convert.ToByte(_realRnd.Next(18, 59));
 			return new Person(name, surname, age, gender);
-
 		}
 
 	}
