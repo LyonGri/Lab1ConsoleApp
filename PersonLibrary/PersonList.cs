@@ -15,23 +15,23 @@ namespace PersonLibrary
 		/// <summary>
 		/// Массив содержащий в себе список персон
 		/// </summary>
-		private Person[] _persons;
+		private PersonBase[] _persons;
 
 		/// <summary>
 		/// Описание абстракции списка содержащего объекты класса Person
 		/// </summary>
 		public PersonList()
 		{
-			_persons = new Person[0];
+			_persons = new PersonBase[0];
 		}
 
 		/// <summary>
 		/// Добавление новых Person в список
 		/// </summary>
 		/// <param name="person">Персона для добавления</param>
-		public void PersonAdd(Person person)
+		public void PersonAdd(PersonBase person)
 		{
-			Array.Resize<Person>(ref _persons, _persons.Length + 1);
+			Array.Resize<PersonBase>(ref _persons, _persons.Length + 1);
 			_persons[_persons.Length - 1] = person;
 		}
 
@@ -43,7 +43,7 @@ namespace PersonLibrary
 		{
 			if ((_persons.Length != 0) && (_persons.Length >= indexToDelete))
 			{
-				var output = new Person[_persons.Length - 1];
+				var output = new PersonBase[_persons.Length - 1];
 				int counter = 0;
 				for (int i = 0; i < _persons.Length; i++)
 				{
@@ -64,15 +64,14 @@ namespace PersonLibrary
 		{
 			if ((_persons.Length != 0) && (nameToDelete != null))
 			{
-				var output = new Person[0];
+				var output = new PersonBase[0];
 				int counter = 0;
-				//TODO: Убрать комментарии +
 				for (int i = 0; i < _persons.Length; i++)
 				{
 					if (_persons[i].Name.ToLower() == nameToDelete.ToLower()
 						|| _persons[i].Surname.ToLower() == nameToDelete.ToLower()) continue;
 
-					Array.Resize<Person>(ref output, output.Length + 1);
+					Array.Resize<PersonBase>(ref output, output.Length + 1);
 					output[counter] = _persons[i];
 					counter++;
 				}
@@ -85,13 +84,13 @@ namespace PersonLibrary
 		/// </summary>
 		/// <param name="indexToSearch">Идекс для поиска</param>
 		/// <returns>Значение соответствующее индексу</returns>
-		public Person SearchByIndex(int indexToSearch)
+		public PersonBase SearchByIndex(int indexToSearch)
 		{
 			if (indexToSearch <= _persons.Length)
 			{
 				return _persons[indexToSearch];
 			}
-			else 
+			else
 			{
 				return null;
 			}
@@ -123,7 +122,7 @@ namespace PersonLibrary
 		public void Clear()
 		{
 			Array.Clear(_persons, 0, _persons.Length);
-			Array.Resize<Person>(ref _persons, 0);
+			Array.Resize<PersonBase>(ref _persons, 0);
 		}
 
 		/// <summary>
@@ -139,7 +138,7 @@ namespace PersonLibrary
 		/// </summary>
 		/// <param name="index">Индекс</param>
 		/// <returns>Индекс записи</returns>
-		public Person this[int index]
+		public PersonBase this[int index]
 		{
 			get
 			{
@@ -154,7 +153,6 @@ namespace PersonLibrary
 			private set
 			{
 				int minimumValue = 0;
-				//TODO: Скобочки +
 				if (index < minimumValue)
 				{
 					if (((index < minimumValue)))

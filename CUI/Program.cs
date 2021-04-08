@@ -93,9 +93,9 @@ namespace UI
 			ValidateInput(typeOfPersonDefinition.Item1, typeOfPersonDefinition.Item2);
 
 			//такая конструкция не заработала:(
-			//PersonBase person = typeOfPerson
-			//	? new Adult()
-			//	: new Child();
+			PersonBase person = typeOfPerson
+				? new Adult()
+				: new Child();
 
 			//var person = new Adult();
 			if (typeOfPerson)

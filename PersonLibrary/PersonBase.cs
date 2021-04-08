@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
-//TODO: Кириллица! +
 /// <summary>
 /// Гендерная идентичность
 /// </summary>
-public enum Gender : byte
+public enum Gender
 {
 	Male,
 	Female
@@ -22,7 +21,7 @@ namespace PersonLibrary
 	/// <summary>
 	/// Описывает person
 	/// </summary>
-	public class Person
+	public abstract class PersonBase
 	{
 		private string _name;
 
@@ -57,27 +56,10 @@ namespace PersonLibrary
 		/// <summary>
 		/// Возраст
 		/// </summary>
-		public byte Age
+		public abstract byte Age
 		{
-			get => _age;
-			set
-			{
-				const string pattern = @"\D";
-				Regex regex = new Regex(pattern);
-				if (regex.IsMatch(value.ToString()) == true)
-				{
-					throw new ArgumentException("Возраст должен быть числом!");
-				}
-				const byte maximumValue = 122;
-				const byte minimumValue = 0;
-				if ((value > maximumValue) || (value <= minimumValue))
-				{
-					throw new ArgumentException("Возраст должен быть больше чем " +
-						$"{minimumValue} и меньше либо равен {maximumValue}!");
-				}
-				_age = value;
-			}
-			
+			get;
+			set;
 		}
 
 		private Gender _gender;
@@ -85,8 +67,8 @@ namespace PersonLibrary
 		/// <summary>
 		/// Пол
 		/// </summary>
-		public Gender Gender 
-		{ 
+		public Gender Gender
+		{
 			get => _gender;
 			set
 			{
@@ -101,7 +83,7 @@ namespace PersonLibrary
 		/// <param name="surname">Фамилия</param>
 		/// <param name="age">Возраст</param>
 		/// <param name="gender">Пол</param>
-		public Person(string name, string surname, byte age, Gender gender)
+		public PersonBase(string name, string surname, byte age, Gender gender)
 		{
 			Name = name;
 			Surname = surname;
@@ -109,19 +91,11 @@ namespace PersonLibrary
 			Gender = gender;
 		}
 
-        /// <summary>
-        /// Конструктор со значениями по умолчанию
-        /// </summary>
-        public Person() : this("Неизвестно", "Неизвестно", 18, Gender.Male) {  }
 
-		//TODO: В info + свойство +
 		/// <summary>
 		/// Данные о персоне
 		/// </summary>
-        public string Info
-		{
-			get => $"Имя: {Name} \tФамилия: {Surname} \tВозраст: {Age} \tПол: {GenderRus(Gender)}";
-		}
+		public virtual string Info => $"Имя: {Name} \tФамилия: {Surname} \tВозраст: {Age} \tПол: {GenderRus(Gender)}";
 
 		/// <summary>
 		/// Проверка и форматирование имени и фамилии
@@ -129,7 +103,7 @@ namespace PersonLibrary
 		/// <param name="expression">Строка для проверки</param>
 		/// <returns>Проверенная строка отформатированная в соответствии с правописанием</returns>
 		private static string ValidateName(string expression)
-        {
+		{
 			if (expression == "" || expression == null)
 			{
 				throw new ArgumentException("Это поле не должно быть пустым!");
@@ -138,7 +112,7 @@ namespace PersonLibrary
 			const string hyphenPattern = @"-";
 			Regex letterRegex = new Regex(letterPattern);
 			Regex hyphenRegex = new Regex(hyphenPattern);
-			if (letterRegex.IsMatch(expression.ToLower()) == true ||
+			if (letterRegex.IsMatch(expression.ToLower()) ||
 				hyphenRegex.Matches(expression.ToLower()).Count > 1)
 			{
 				throw new ArgumentException("Поле заполнено некорректно.");
@@ -151,11 +125,50 @@ namespace PersonLibrary
 		/// </summary>
 		/// <param name="gender">Gender перосоны</param>
 		/// <returns>Пол на русском языке</returns>
-		private static string GenderRus(Gender gender)
-        {
-			 return gender == Gender.Male
-				? "Мужчина"
-				: "Женщина";
+		protected static string GenderRus(Gender gender)
+		{
+			return gender == Gender.Male
+			   ? "Мужчина"
+			   : "Женщина";
+		}
+
+		/// <summary>
+		/// Метод для проверки возраста
+		/// </summary>
+		/// <param name="value">Проверяемый возраст</param>
+		/// <param name="minimumValue">Минимальный возраст</param>
+		/// <param name="maximumValue">Максимальный возраст</param>
+		protected static void ValidateAge(byte value, byte minimumValue, byte maximumValue)
+		{
+			const string pattern = @"\D";
+			Regex regex = new Regex(pattern);
+			if (regex.IsMatch(value.ToString()))
+			{
+				throw new ArgumentException("Возраст должен быть числом!");
+			}
+
+			if ((value > maximumValue) || (value < minimumValue))
+			{
+				throw new ArgumentException("Возраст должен быть больше или равен " +
+					$"{minimumValue} и меньше либо равен {maximumValue}!");
+			}
+		}
+
+		/// <summary>
+		/// Метод для проверки учреждения (работа/учеба)
+		/// </summary>
+		/// <param name="expression">Проверяемое выражение</param>
+		protected static void ValidateSharaga(string expression)
+		{
+			if ((expression != null))
+			{
+				const string letterPattern = @"[^а-я^ё^А-Я^Ё^№0-9' ]";
+				Regex letterRegex = new Regex(letterPattern);
+				if (letterRegex.IsMatch(expression))
+				{
+					throw new ArgumentException("Поле заполнено некорректно.");
+				}
+			}
 		}
 	}
 }
