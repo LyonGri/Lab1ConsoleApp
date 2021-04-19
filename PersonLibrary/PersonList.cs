@@ -10,7 +10,7 @@ namespace PersonLibrary
 	/// <summary>
 	/// Описывает список персон
 	/// </summary>
-	public class PersonList
+	public class PersonList : IEnumerable
 	{
 		/// <summary>
 		/// Массив содержащий в себе список персон
@@ -162,6 +162,16 @@ namespace PersonLibrary
 					_persons[index] = value;
 				}
 			}
+		}
+
+
+		/// <summary>
+		/// Енумератор для ForEach
+		/// </summary>
+		/// <returns>Запись</returns>
+		public IEnumerator GetEnumerator()
+		{
+			return _persons.GetEnumerator();
 		}
 	}
 }

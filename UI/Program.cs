@@ -183,7 +183,7 @@ namespace UI
 					"Супруг: ",
 					() =>
 					{
-						person.Spouse = Randomizer.GetRandomAdult(person);
+						person.Spouse = Randomizer.GetRandomSpouse(person);
 						Console.WriteLine("Супруг сгенерирован!");
 					}
 				),
@@ -279,7 +279,7 @@ namespace UI
 					"Отец: ",
 					() =>
 					{
-						person.Father = Randomizer.GetRandomAdult(person.Mother);
+						person.Father = Randomizer.GetRandomSpouse(person.Mother);
 						Console.WriteLine("Отец сгенерирован!");
 					}
 				),

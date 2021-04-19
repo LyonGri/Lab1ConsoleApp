@@ -5,7 +5,10 @@ using System.Text.RegularExpressions;
 
 namespace PersonLibrary
 {
-	//TODO: xml
+	//TODO: xml +
+	/// <summary>
+	/// Описывает ребенка
+	/// </summary>
 	public class Child : PersonBase
 	{
 		/// <summary>
@@ -55,7 +58,7 @@ namespace PersonLibrary
 			get => _school;
 			set
 			{
-				ValidateSharaga(value);
+				ValidateInstitution(value);
 				_school = value;
 			}
 		}
@@ -100,23 +103,70 @@ namespace PersonLibrary
 		/// <summary>
 		/// Конструктор со значениями по умолчанию
 		/// </summary>
-		public Child() : this("Неизвестно", "Неизвестно", 0, Gender.Male, null, null, null) { }
+		public Child() : this("Неизвестно", "Неизвестно", 0, Gender.Male, null, null, "") { }
 
 		/// <summary>
 		/// Информация о ребенке
 		/// </summary>
 		public override string Info
 		{
-			//вынести переменные
-			//TODO: RSDN
-			get => $"Имя: {Name}\n" +
-				$"Фамилия: {Surname}\n" +
-				$"Возраст: {Age}\n" +
-				$"Пол: {GenderRus(Gender)}\n" +
-				$"Мать: {(Mother != null ? $"{Mother.Name} {Mother.Surname}" : "Матери нет\n")}" +
-				$"Отец: {(Father != null ? $"{Father.Name} {Father.Surname}" : "Отца нет")}\n" +
-				$"Детский сад/школа: {(((School != null) && (School != "")) ? $"{School}" : "Дома сидит")}";
+			//TODO: RSDN +
+			get
+			{
+				var motherInfo = Mother != null
+					? $"{Mother.Name} {Mother.Surname}"
+					: "Матери нет";
+				var fatherInfo = Father != null
+					? $"{Father.Name} {Father.Surname}"
+					: "Отца нет";
+				var schoolInfo = School != ""
+					? $"{School}"
+					: "Сидит дома с бабушкой";
+				return  base.Info +
+						$"Мать: {motherInfo}\n" +
+						$"Отец: {fatherInfo}\n" +
+						$"Детский сад/школа: {schoolInfo}";
+			}
 		}
 
+
+		/// <summary>
+		/// Запись в дневнике
+		/// </summary>
+		/// <returns>Строка с записью</returns>
+		public string DiaryEntry()
+		{
+			var outputString = "*Сообщение в дневнике*\n";
+			if (School != "")
+			{
+				if (Mother != null && Father == null)
+				{
+					outputString += $"Уважаемая {Mother.Name} {Mother.Surname}!";
+				}
+				if (Father != null && Mother == null)
+				{
+					outputString += $"Уважаемый {Father.Name} {Father.Surname}!";
+				}
+				if (Mother != null && Father != null)
+				{
+					if (Father.Surname == Mother.Surname)
+                    {
+					outputString += $"Уважаемые {Father.Name} " +
+						$"и {Mother.Name} {Mother.Surname}!";
+                    }
+					else
+                    {
+						outputString += $"Уважаемые {Father.Name} {Father.Surname} " +
+							$"и {Mother.Name} {Mother.Surname}!";
+					}
+				}
+				if (Mother == null && Father == null)
+				{
+					outputString += $"Уважаемые опекуны!";
+				}
+				return outputString + $"\nАдминистрация уведомляет, что Вас вызывают к Директору!\n{School}.";
+			}
+			return outputString + "Школа не для меня, ухожу снимать TikTok.";
+		}
 	}
 }

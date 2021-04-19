@@ -5,7 +5,10 @@ using System.Text.RegularExpressions;
 
 namespace PersonLibrary
 {
-	//TODO: XML
+	//TODO: XML +
+	/// <summary>
+	/// Описывает взрослого
+	/// </summary>
 	public class Adult : PersonBase
 	{
 		/// <summary>
@@ -62,7 +65,7 @@ namespace PersonLibrary
 			get => _job;
 			set
 			{
-				ValidateSharaga(value);
+				ValidateInstitution(value);
 				_job = value;
 			}
 		}
@@ -107,20 +110,49 @@ namespace PersonLibrary
 		/// <summary>
 		/// Конструктор со значениями по умолчанию
 		/// </summary>
-		public Adult() : this("Неизвестно", "Неизвестно", 18, Gender.Male, "0000000000", null, null) { }
+		public Adult() : this("Неизвестно", "Неизвестно", 18, Gender.Male, "0000000000", null, "") { }
 
 		/// <summary>
 		/// Информация о взрослом
 		/// </summary>
 		public override string Info
 		{
-			get => $"Имя: {Name}\n" +
-				$"Фамилия: {Surname}\n" +
-				$"Возраст: {Age}\n" +
-				$"Пол: {GenderRus(Gender)}\n" +
-				$"Паспорт: {Passport}" +
-				$"\nСупруг: {(Spouse != null ? $"{Spouse.Name} {Spouse.Surname}" : "Отсутствует")}" +
-				$"\nМесто работы: {(((Job != null) && (Job != "")) ?$"{Job}" : "Без работы")}";
+			get
+			{
+				var spouseInfo = Spouse != null
+					? $"{Spouse.Name} {Spouse.Surname}"
+					: "Отсутствует";
+				var jobInfo = Job != "" 
+					? $"{Job}" 
+					: "Без работы";
+				return	base.Info +
+						$"Паспорт: {Passport}\n" +
+						$"Супруг: {spouseInfo}\n" +
+						$"Место работы: {jobInfo}";
+			}
+		}
+
+		/// <summary>
+		/// Найти пару с помощью Тиндер
+		/// </summary>
+		/// <returns>Поздравления</returns>
+		public string SignUpTinder()
+		{
+			//инсценировка работы подобного сервиса
+			var lover = Randomizer.GetRandomAdult();
+			if (Math.Abs(Age - lover.Age) <= 7 && Gender != lover.Gender)
+			{
+				Spouse = lover;
+				lover.Spouse = Spouse;
+				return $"*{Name} {Surname} ({EndOfAgeInWords(Age)}), сидит в Tinder*\n" +
+					"Свайп влево, свайп вправо и пара найдена\n" +
+					$"{lover.Name} {lover.Surname}, {EndOfAgeInWords(lover.Age)}!\n" +
+					$"Не забудьте оценить наш сервис!";
+			}
+			else
+			{
+				return SignUpTinder();
+			}
 		}
 	}
 }

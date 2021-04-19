@@ -25,12 +25,21 @@ namespace UI
 			{
 				Console.WriteLine("Список пуст!");
 			}
-			for (int i = 0; i < personList.Count; i++)
-			{
-				Console.WriteLine($"Запись {i + 1}:");
-				Console.WriteLine(personList[i].Info);
+			int i = 1;
+			foreach (PersonBase person in personList)
+            {
+				Console.WriteLine($"Запись {i}.");
+				Console.WriteLine(person.Info);
 				Console.WriteLine();
-			}
+				i++;
+            }
+			//добавил возможность foreach, но i++ остался:)
+			//for (int i = 0; i < personList.Count; i++)
+			//{
+			//	Console.WriteLine($"Запись {i + 1}:");
+			//	Console.WriteLine(personList[i].Info);
+			//	Console.WriteLine();
+			//}
 			Console.WriteLine();
 		}
 
@@ -62,8 +71,7 @@ namespace UI
 		/// <returns>Персона введенная с клавиатуры</returns>
 		private static PersonBase InputSelection()
 		{
-
-			Console.WriteLine("Введите данные о новой персоне на русском языке");
+			
 			//true - Adult; false Child
 			bool typeOfPerson = true;
 			var typeOfPersonDefinition = new Tuple<string, Action>
@@ -75,11 +83,13 @@ namespace UI
 					{
 						case "1":
 							{
+								Console.WriteLine("Введите данные о взрослом на русском языке");
 								typeOfPerson = true;
 								break;
 							}
 						case "2":
 							{
+								Console.WriteLine("Введите данные о ребенке на русском языке");
 								typeOfPerson = false;
 								break;
 							}
@@ -92,34 +102,13 @@ namespace UI
 			);
 			ValidateInput(typeOfPersonDefinition.Item1, typeOfPersonDefinition.Item2);
 
-			//такая конструкция не заработала:(
 			PersonBase person = typeOfPerson
 				? new Adult()
 				: new Child();
 
-			//var person = new Adult();
-			if (typeOfPerson)
+			var validationPersonActions = new List<Tuple<string, Action>>()
 			{
-				return InputAdult();
-			}
-			else
-			{
-				return InputChild();
-			}
-		}
-
-		/// <summary>
-		/// Метод для ввода взрослого с клавиатуры
-		/// </summary>
-		/// <returns>Взрослый введенный с клавиатуры</returns>
-		private static Adult InputAdult()
-		{
-			Console.WriteLine("Введите данные о взрослом на русском языке");
-			var person = new Adult();
-
-			var validationAdultActions = new List<Tuple<string, Action>>()
-			{
-				//TODO: Дубли
+				//TODO: Дубли +
 				new Tuple<string, Action>
 				(
 					"Имя: ",
@@ -169,13 +158,18 @@ namespace UI
 							}
 						}
 					}
-				),
+				)
+			};
+
+			var validationAdultActions = new List<Tuple<string, Action>>()
+			{
+				//TODO: Дубли +
 				new Tuple<string, Action>
 				(
 					"Паспорт: ",
 					() =>
 					{
-						person.Passport = Console.ReadLine();
+						((Adult)person).Passport = Console.ReadLine();
 					}
 				),
 				new Tuple<string, Action>
@@ -183,7 +177,7 @@ namespace UI
 					"Супруг: ",
 					() =>
 					{
-						person.Spouse = Randomizer.GetRandomAdult(person);
+						((Adult)person).Spouse = Randomizer.GetRandomSpouse((Adult)person);
 						Console.WriteLine("Супруг сгенерирован!");
 					}
 				),
@@ -192,85 +186,20 @@ namespace UI
 					"Работа: ",
 					() =>
 					{
-						person.Job = Console.ReadLine();
+						((Adult)person).Job = Console.ReadLine();
 					}
 				),
 			};
-			foreach (var actionItem in validationAdultActions)
-			{
-				ValidateInput(actionItem.Item1, actionItem.Item2);
-			}
-			return person;
-		}
 
-		/// <summary>
-		/// Метод для ввода ребенка с клавиатуры
-		/// </summary>
-		/// <returns>Ребенок введенный с клавиатуры</returns>
-		private static Child InputChild()
-		{
-			Console.WriteLine("Введите данные о ребенке на русском языке");
-			var person = new Child();
-
-			var validationAdultActions = new List<Tuple<string, Action>>()
+			var validationChildActions = new List<Tuple<string, Action>>()
 			{
-				//TODO: Дубли
-				new Tuple<string, Action>
-				(
-					"Имя: ",
-					() =>
-					{
-						person.Name = Console.ReadLine();
-					}
-				),
-				new Tuple<string, Action>
-				(
-					"Фамилия: ",
-					() =>
-					{
-						person.Surname = Console.ReadLine();
-					}
-				),
-				new Tuple<string, Action>
-				(
-					"Возраст: ",
-					() =>
-					{
-						person.Age = Byte.Parse(Console.ReadLine());
-					}
-				),
-				new Tuple<string, Action>
-				(
-					"Пол (М/Ж): ",
-					() =>
-					{
-						switch (Console.ReadLine())
-						{
-							case "М":
-							case "м":
-							{
-								person.Gender = Gender.Male;
-								break;
-							}
-							case "Ж":
-							case "ж":
-							{
-								person.Gender = Gender.Female;
-								break;
-							}
-							default:
-							{
-								throw new ArgumentException("Вам нужно выбрать 'М' или 'Ж'");
-							}
-						}
-					}
-				),
+				//TODO: Дубли +
 				new Tuple<string, Action>
 				(
 					"Мать: ",
 					() =>
 					{
-						person.Mother = Randomizer.GetRandomAdult();
+						((Child)person).Mother = Randomizer.GetRandomAdult();
 						Console.WriteLine("Мать сгенерирована!");
 					}
 				),
@@ -279,7 +208,7 @@ namespace UI
 					"Отец: ",
 					() =>
 					{
-						person.Father = Randomizer.GetRandomAdult(person.Mother);
+						((Child)person).Father = Randomizer.GetRandomSpouse(((Child)person).Mother);
 						Console.WriteLine("Отец сгенерирован!");
 					}
 				),
@@ -288,15 +217,38 @@ namespace UI
 					"Школа/Детский сад: ",
 					() =>
 					{
-						person.School = Console.ReadLine();
+						((Child)person).School = Console.ReadLine();
 					}
 				),
 			};
-			foreach (var actionItem in validationAdultActions)
+
+			ActionForEach(validationPersonActions);
+
+			switch (typeOfPerson)
+			{
+				case true:
+				{
+					ActionForEach(validationAdultActions);
+					break;
+				}
+				case false:
+				{
+					ActionForEach(validationChildActions);
+					break;
+				}
+			}
+			return person;
+		}
+
+		/// <summary>
+		/// Метод для выполнения всех записей в листе с делегатами
+		/// </summary>
+		private static void ActionForEach(List<Tuple<string, Action>> validationActions)
+		{
+			foreach (var actionItem in validationActions)
 			{
 				ValidateInput(actionItem.Item1, actionItem.Item2);
 			}
-			return person;
 		}
 
 		/// <summary>
@@ -304,7 +256,7 @@ namespace UI
 		/// </summary>
 		/// <param name="person">Проверяемый человек</param>
 		/// <returns></returns>
-		static public string GetTypeofPerson(PersonBase person)
+		static public string GetTypeOfPerson(PersonBase person)
 		{
 			return person is Adult
 				? "Взрослый"
@@ -312,9 +264,39 @@ namespace UI
 		}
 
 		/// <summary>
+		/// Выполнение особых методов для каждого ребенка и взрослого
+		/// </summary>
+		/// <param name="person">Для кого требуется выполнить метод</param>
+		public static void ExecuteExclusiveMethod(PersonBase person)
+        {
+			Console.WriteLine();
+			Console.WriteLine("Выполнение особго метода");
+			Console.WriteLine();
+			Console.Clear();
+			
+			switch (person)
+            {
+				case Adult:
+                {
+					Console.ForegroundColor = ConsoleColor.Blue;
+					Console.WriteLine(((Adult)person).SignUpTinder());
+					break;
+                }
+				case Child:
+				{
+					Console.ForegroundColor = ConsoleColor.Red;
+					Console.WriteLine(((Child)person).DiaryEntry());
+					break;
+				}
+			}
+			Console.ForegroundColor = ConsoleColor.White;
+
+		}
+
+		/// <summary>
 		/// Тело программы
 		/// </summary>
-		static void Main()
+		internal static void Main()
 		{
 			//то что было по заданию
 			var people = new PersonList();
@@ -324,14 +306,18 @@ namespace UI
 			}
 			ListToConsole(people, "Описание людей списка:");
 			Console.Write($"Тип четвертого человека в списке: " +
-				$"{GetTypeofPerson(people.SearchByIndex(3))}");
+				$"{GetTypeOfPerson(people.SearchByIndex(3))}");
+			Console.WriteLine();
+			Console.WriteLine("Нажмите любую клавишу чтобы выполнить особый метод...");
+			Console.ReadKey();
+			ExecuteExclusiveMethod(people.SearchByIndex(3));
 
 
 			//для проверки ввода 
 			while (true)
 			{
 				Console.WriteLine();
-				Console.WriteLine("Нажмите любую клавишу чтобы продолжить...");
+				Console.WriteLine("Нажмите любую клавишу для свободного ввода...");
 				Console.ReadKey();
 				Console.Clear();
 				var chelovek = InputSelection();

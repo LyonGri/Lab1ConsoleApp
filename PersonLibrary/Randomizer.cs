@@ -11,8 +11,8 @@ namespace PersonLibrary
 	/// </summary>
 	public static class Randomizer
 	{
-		//TODO:
-		private static Random _realRnd = new Random(DateTime.Now.Second);
+		//TODO: +
+		private static Random _random = new Random(DateTime.Now.Second);
 
 		private static List<string> _rusMaleNames = new List<string>()
 		{
@@ -68,11 +68,11 @@ namespace PersonLibrary
 
 		private static List<string> _schools = new List<string>()
 		{
-			"Лицей",
-			"Гимназия",
+			"Лицей имени Фенимора Купера",
+			"Гимназия для альтернативно одаренных",
 			"Детский сад 'Газик'",
-			"Школа №1",
-			"Ясли",
+			"Школа с уклоном",
+			"Ясли 'Паровозик'",
 		};
 
 		/// <summary>
@@ -81,7 +81,7 @@ namespace PersonLibrary
 		/// <returns>Экземпляр случайной персоны</returns>
 		static public PersonBase GetRandomPerson()
 		{
-			if (_realRnd.Next(1, 3) == 1)
+			if (_random.Next(1, 3) == 1)
 			{
 				return GetRandomChild();
 			}
@@ -97,19 +97,12 @@ namespace PersonLibrary
 		/// <returns>Экземпляр случайного взрослого</returns>
 		static public Adult GetRandomAdult()
 		{
-			//TODO: Дубли
+			//TODO: Дубли +
 			var adult = new Adult();
-			adult.Gender = _realRnd.Next(1, 3) == 1
-				? Gender.Male
-				: Gender.Female;
-			adult.Name = adult.Gender == Gender.Male
-				? _rusMaleNames[_realRnd.Next(0, _rusMaleNames.Count)]
-				: _rusFemaleNames[_realRnd.Next(0, _rusFemaleNames.Count)];
-			adult.Surname = _rusSurnames[_realRnd.Next(0, _rusSurnames.Count)];
-			adult.Age = Convert.ToByte(_realRnd.Next(Adult.MinimumAge, Adult.MaximumAge));
-			adult.Passport = GetPassport();
-			adult.Job = _jobPlace[_realRnd.Next(0, _jobPlace.Count)];
-			if (_realRnd.Next(1, 3) == 1)
+			adult.Gender = GetGender();
+			GetBasicInformation(adult);
+			adult.Surname = GetSurname();
+			if (_random.Next(1, 3) == 1)
 			{
 				adult.Spouse = GetRandomSpouse(adult);
 			}
@@ -120,21 +113,16 @@ namespace PersonLibrary
 		/// Метод для генерации супруга
 		/// </summary>
 		/// <param name="spouse">Взрослый для которого нужно сгенерировать супруга</param>
-		/// <returns>Супруга</returns>
-		static public Adult GetRandomAdult(Adult spouse)
+		/// <returns>Супруг</returns>
+		static public Adult GetRandomSpouse(Adult spouse)
 		{
-			//TODO: Дубли
+			//TODO: Дубли +
 			var adult = new Adult();
-			adult.Gender = spouse.Gender == Gender.Male
-				? Gender.Female
-				: Gender.Male;
-			adult.Name = adult.Gender == Gender.Male
-				? _rusMaleNames[_realRnd.Next(0, _rusMaleNames.Count)]
-				: _rusFemaleNames[_realRnd.Next(0, _rusFemaleNames.Count)];
+			adult.Gender = spouse.Gender == Gender.Female
+					? Gender.Male
+					: Gender.Female; ;
+			GetBasicInformation(adult);
 			adult.Surname = spouse.Surname;
-			adult.Age = Convert.ToByte(_realRnd.Next(Adult.MinimumAge, Adult.MaximumAge));
-			adult.Passport = GetPassport();
-			adult.Job = _jobPlace[_realRnd.Next(0, _jobPlace.Count)];
 			adult.Spouse = spouse;
 			return adult;
 		}
@@ -145,15 +133,12 @@ namespace PersonLibrary
 		/// <returns>Экземпляр случайного ребенка</returns>
 		static public Child GetRandomChild()
 		{
-			//TODO: Дубли
+			//TODO: Дубли +
 			var child = new Child();
-			child.Gender = _realRnd.Next(1, 3) == 1
+			child.Gender = _random.Next(1, 3) == 1
 				? Gender.Male
 				: Gender.Female;
-			child.Name = child.Gender == Gender.Male
-				? _rusMaleNames[_realRnd.Next(0, _rusMaleNames.Count)]
-				: _rusFemaleNames[_realRnd.Next(0, _rusFemaleNames.Count)];
-			child.Age = Convert.ToByte(_realRnd.Next(Child.MinimumAge, Child.MaximumAge));
+			GetBasicInformation(child);
 			var parent = GetRandomAdult();
 			if (parent.Spouse != null)
 			{
@@ -180,29 +165,80 @@ namespace PersonLibrary
 				}
 			}
 			child.Surname = parent.Surname;
-			child.School = _schools[_realRnd.Next(0, _schools.Count)];
 			return child;
 		}
 
 		/// <summary>
-		/// Генерация случайного партнера в зависимости от пола
+		/// Сгенерировать имя в зависимости от пола
 		/// </summary>
-		/// <param name="spouse">Adult для которого нужно сгенерировать персону</param>
-		/// <returns>Партнера для созданной ранее персоны</returns>
-		static private Adult GetRandomSpouse(Adult spouse)
+		/// <param name="gender">Пол</param>
+		/// <returns>Имя</returns>
+		static private string GetName(Gender gender)
+        {
+			return gender == Gender.Male
+				? _rusMaleNames[_random.Next(0, _rusMaleNames.Count)]
+				: _rusFemaleNames[_random.Next(0, _rusFemaleNames.Count)];
+		}
+
+		/// <summary>
+		/// Сгенерировать пол
+		/// </summary>
+		/// <returns>Пол</returns>
+		static private Gender GetGender()
 		{
-			//TODO: Дубли
-			var gender = spouse.Gender == Gender.Male
-				? Gender.Female
-				: Gender.Male;
-			var name = gender == Gender.Male
-				? _rusMaleNames[_realRnd.Next(0, _rusMaleNames.Count)]
-				: _rusFemaleNames[_realRnd.Next(0, _rusFemaleNames.Count)];
-			var surname = spouse.Surname;
-			var age = Convert.ToByte(_realRnd.Next(Adult.MinimumAge, Adult.MaximumAge));
-			var passport = GetPassport();
-			var job = _jobPlace[_realRnd.Next(0, _jobPlace.Count)];
-			return new Adult(name, surname, age, gender, passport, spouse, job);
+			return _random.Next(1, 3) == 1
+					? Gender.Male
+					: Gender.Female;
+		}
+
+		/// <summary>
+		/// Сгенерировать фамилию
+		/// </summary>
+		/// <returns>Фамилия</returns>
+		static private string GetSurname()
+		{
+			return  _rusSurnames[_random.Next(0, _rusSurnames.Count)];
+		}
+
+		/// <summary>
+		/// Сгенерировать возраст
+		/// </summary>
+		/// <param name="minimumAge">Минимальный возраст</param>
+		/// <param name="maximumAge">Максимальный возраст</param>
+		/// <returns>Возраст</returns>
+		static private byte GetAge(byte minimumAge, byte maximumAge)
+		{
+			return Convert.ToByte(_random.Next(minimumAge, maximumAge));
+		}
+
+		/// <summary>
+		/// Получить место работы/учебы
+		/// </summary>
+		/// <param name="institutions"></param>
+		/// <returns>Место работы/учебы</returns>
+		static private string GetInstitution(List<string> institutions)
+		{
+			return institutions[_random.Next(0, institutions.Count)];
+		}
+
+		/// <summary>
+		/// Генерация основной информации
+		/// </summary>
+		/// <param name="person">Персона для которой нужно сгенерировать информацию</param>
+		static private void GetBasicInformation(PersonBase person)
+		{
+			person.Name = GetName(person.Gender);
+			if (person is Adult)
+            {
+                ((Adult)person).Age = GetAge(Adult.MinimumAge, Adult.MaximumAge);
+				((Adult)person).Passport = GetPassport();
+				((Adult)person).Job = GetInstitution(_jobPlace);
+            }
+			else
+			{
+				((Child)person).Age = GetAge(Child.MinimumAge, Child.MaximumAge);
+				((Child)person).School = GetInstitution(_schools);
+			}
 		}
 
 		/// <summary>
@@ -214,7 +250,7 @@ namespace PersonLibrary
 			string passport = "";
 			for (int i = 0; i < 10; i++)
 			{
-				passport += _realRnd.Next(0, 10).ToString();
+				passport += _random.Next(0, 10).ToString();
 			}
 			return passport;
 		}

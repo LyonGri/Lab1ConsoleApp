@@ -51,8 +51,6 @@ namespace PersonLibrary
 			}
 		}
 
-		private byte _age;
-
 		/// <summary>
 		/// Возраст
 		/// </summary>
@@ -95,7 +93,17 @@ namespace PersonLibrary
 		/// <summary>
 		/// Данные о персоне
 		/// </summary>
-		public virtual string Info => $"Имя: {Name} \tФамилия: {Surname} \tВозраст: {Age} \tПол: {GenderRus(Gender)}";
+		public virtual string Info
+		{
+			get
+			{
+				return $"Имя: {Name}\n" +
+					$"Фамилия: {Surname}\n" +
+					$"Возраст: {EndOfAgeInWords(Age)}\n" +
+					$"Пол: {GenderRus(Gender)}\n";
+			}
+		}
+
 
 		/// <summary>
 		/// Проверка и форматирование имени и фамилии
@@ -133,6 +141,44 @@ namespace PersonLibrary
 		}
 
 		/// <summary>
+		/// Метод для добавления к возрасту слов
+		/// </summary>
+		/// <param name="age">Возраст</param>
+		/// <returns></returns>
+		protected static string EndOfAgeInWords(byte age)
+		{
+			string outputAge = $"{age}";
+			//тут switch не подходит, так как оба if'а надо выполнить если условия выполняются
+			//
+			if (age > 100)
+			{
+				age = Convert.ToByte(age % 100);
+			}
+			if (age >= 10 && age <= 20)
+            {
+				return outputAge + " лет";
+			}
+			switch (age%10)
+            {
+				case 1:
+                {
+					return outputAge +" год";
+				}
+				case 2:
+				case 3:
+				case 4:
+				{
+					return outputAge + " года";
+				}
+				default:
+                {
+					return outputAge + " лет";
+                }
+			}
+
+		}
+
+		/// <summary>
 		/// Метод для проверки возраста
 		/// </summary>
 		/// <param name="value">Проверяемый возраст</param>
@@ -158,16 +204,13 @@ namespace PersonLibrary
 		/// Метод для проверки учреждения (работа/учеба)
 		/// </summary>
 		/// <param name="expression">Проверяемое выражение</param>
-		protected static void ValidateSharaga(string expression)
+		protected static void ValidateInstitution(string expression)
 		{
-			if ((expression != null))
+			const string letterPattern = @"[^а-я^ё^А-Я^Ё^№0-9' ]";
+			Regex letterRegex = new Regex(letterPattern);
+			if (letterRegex.IsMatch(expression))
 			{
-				const string letterPattern = @"[^а-я^ё^А-Я^Ё^№0-9' ]";
-				Regex letterRegex = new Regex(letterPattern);
-				if (letterRegex.IsMatch(expression))
-				{
-					throw new ArgumentException("Поле заполнено некорректно.");
-				}
+				throw new ArgumentException("Поле заполнено некорректно.");
 			}
 		}
 	}
